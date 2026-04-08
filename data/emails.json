@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "from": "alice.johnson@email.com",
+    "subject": "I need a refund for my broken headphones",
+    "text": "Hi, I purchased a pair of wireless headphones from your store last week (Order #45821). They stopped working after just two days. The left earpiece produces no sound at all. I would like a full refund or a replacement. Please let me know how to proceed with the return process.",
+    "intent": "refund_request",
+    "priority": "medium",
+    "expected_keywords": ["refund", "replacement", "return", "order", "defective"],
+    "should_escalate": false
+  },
+  {
+    "id": 2,
+    "from": "bob.martinez@email.com",
+    "subject": "URGENT: Order #39201 still not delivered after 3 weeks",
+    "text": "This is completely unacceptable. I placed an order three weeks ago and it still has not arrived. The tracking number you provided hasn't been updated in 10 days. I paid for express shipping and nothing has shown up. I need this resolved immediately or I want my money back.",
+    "intent": "delivery_issue",
+    "priority": "high",
+    "expected_keywords": ["tracking", "delivery", "shipping", "delay", "refund"],
+    "should_escalate": true
+  },
+  {
+    "id": 3,
+    "from": "carol.white@email.com",
+    "subject": "Terrible customer service experience",
+    "text": "I am writing to express my deep dissatisfaction with your customer service. I called your helpline five times over the past week and was on hold for over an hour each time. When I finally spoke to someone, they were rude and unhelpful. This is not the level of service I expect from a company of your reputation. I want to speak to a manager immediately.",
+    "intent": "complaint",
+    "priority": "high",
+    "expected_keywords": ["apologize", "manager", "service", "improve", "investigate"],
+    "should_escalate": true
+  },
+  {
+    "id": 4,
+    "from": "david.kim@email.com",
+    "subject": "App crashes every time I try to open settings",
+    "text": "Hello, I've been using your mobile app for the past month and it has been working fine. However, since the latest update (version 3.2.1), the app crashes immediately when I tap on Settings. I have tried uninstalling and reinstalling, clearing the cache, and restarting my phone. Nothing works. I'm on an iPhone 14 running iOS 17.2.",
+    "intent": "technical_issue",
+    "priority": "medium",
+    "expected_keywords": ["bug", "update", "troubleshoot", "fix", "debug"],
+    "should_escalate": false
+  },
+  {
+    "id": 5,
+    "from": "emma.davis@email.com",
+    "subject": "Question about your return policy",
+    "text": "Hi there, I recently bought a laptop from your website and I'm wondering what your return policy is. The product page mentioned a 30-day window but I wanted to confirm if that applies to all items including electronics. Also, do I need to keep the original packaging? Thank you for your help.",
+    "intent": "general_inquiry",
+    "priority": "low",
+    "expected_keywords": ["return policy", "30 days", "packaging", "electronics", "help"],
+    "should_escalate": false
+  },
+  {
+    "id": 6,
+    "from": "frank.lopez@email.com",
+    "subject": "Refund request - duplicate charge on my card",
+    "text": "I just noticed that I was charged twice for the same order (#51003). My credit card statement shows two identical charges of $89.99 on the same day. This appears to be a billing error on your end. Please refund the duplicate charge as soon as possible. I have attached my bank statement for reference.",
+    "intent": "refund_request",
+    "priority": "high",
+    "expected_keywords": ["refund", "duplicate", "charge", "billing", "error"],
+    "should_escalate": true
+  },
+  {
+    "id": 7,
+    "from": "grace.chen@email.com",
+    "subject": "Package delivered to wrong address",
+    "text": "My order #47332 was supposed to be delivered to 142 Oak Street, but the delivery confirmation photo shows it was left at a completely different house. I checked with my neighbors and nobody has received it. Can you please help me locate my package or send a replacement? This is urgent as it was a birthday gift.",
+    "intent": "delivery_issue",
+    "priority": "high",
+    "expected_keywords": ["wrong address", "replacement", "locate", "delivery", "urgent"],
+    "should_escalate": true
+  },
+  {
+    "id": 8,
+    "from": "henry.brown@email.com",
+    "subject": "Product quality is not as advertised",
+    "text": "I bought the Premium Wireless Speaker advertised as having 20-hour battery life, but mine barely lasts 4 hours on a full charge. The sound quality is also much worse than the demo on your website. I feel misled by your product description. I'd like to return this and get my money back.",
+    "intent": "complaint",
+    "priority": "medium",
+    "expected_keywords": ["apologize", "return", "quality", "misleading", "refund"],
+    "should_escalate": false
+  },
+  {
+    "id": 9,
+    "from": "isabel.garcia@email.com",
+    "subject": "Cannot log into my account after password reset",
+    "text": "I forgot my password and used the reset link to create a new one. The email confirmed the password was changed, but when I try to log in with the new password, it says 'Invalid credentials.' I've tried this multiple times and even cleared my browser cookies. My account email is isabel.garcia@email.com. Please help me regain access.",
+    "intent": "technical_issue",
+    "priority": "medium",
+    "expected_keywords": ["password", "reset", "login", "account", "access"],
+    "should_escalate": false
+  },
+  {
+    "id": 10,
+    "from": "jack.wilson@email.com",
+    "subject": "Do you offer student discounts?",
+    "text": "Hello, I'm a university student and I'm interested in purchasing your Pro subscription. Do you offer any student discounts or educational pricing? I have a valid .edu email address and can provide my student ID if needed. Thanks!",
+    "intent": "general_inquiry",
+    "priority": "low",
+    "expected_keywords": ["student discount", "education", "pricing", "verification", "offer"],
+    "should_escalate": false
+  },
+  {
+    "id": 11,
+    "from": "karen.taylor@email.com",
+    "subject": "Subscription auto-renewed without my consent",
+    "text": "My annual subscription just auto-renewed and charged me $199.99 without any prior notification. I was planning to cancel before the renewal date but never received a reminder email. I did not use the service at all during this renewal period. I want a full refund and immediate cancellation of my subscription.",
+    "intent": "refund_request",
+    "priority": "medium",
+    "expected_keywords": ["refund", "cancellation", "auto-renew", "notification", "subscription"],
+    "should_escalate": false
+  },
+  {
+    "id": 12,
+    "from": "leo.anderson@email.com",
+    "subject": "Website checkout page shows error 500",
+    "text": "Every time I try to complete my purchase on your website, the checkout page returns a 500 Internal Server Error. I've tried using Chrome, Firefox, and Safari with the same result. My cart has 3 items totaling $245. I've been trying for two days now. This is very frustrating as I just want to buy your products.",
+    "intent": "technical_issue",
+    "priority": "high",
+    "expected_keywords": ["error", "checkout", "server", "fix", "purchase"],
+    "should_escalate": true
+  }
+]
