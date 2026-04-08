@@ -20,6 +20,8 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "refund", "money back", "return process", "duplicate charge",
         "charged twice", "cancel order", "chargeback", "reimburse",
         "damaged item", "broken", "defective",
+        "charged twice", "cancel order", "chargeback", "reimburse",
+        "damaged item", "broken", "defective",
     ],
     "delivery_issue": [
         "delivery", "delivered", "shipping", "shipped", "tracking",
@@ -27,6 +29,11 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "has not arrived", "hasn't been updated", "left at",
     ],
     "complaint": [
+        "complaint", "dissatisfied", "dissatisfaction", "terrible",
+        "horrible", "worst", "rude", "unhelpful", "misled",
+        "misleading", "not as advertised", "feel misled", "quality",
+        "worse than", "disappointed", "reputation", "not the level",
+        "deep dissatisfaction",
         "complaint", "dissatisfied", "dissatisfaction", "terrible",
         "horrible", "worst", "rude", "unhelpful", "misled",
         "misleading", "not as advertised", "feel misled", "quality",
@@ -54,6 +61,9 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
     ],
     "general_inquiry": [
         "question", "wondering", "inquiry", "do you offer",
+        "policy", "information", "discount", "student", "pricing",
+        "education", "verification", "confirm", ".edu", "help",
+        "please", "return policy", "packaging",
         "policy", "information", "discount", "student", "pricing",
         "education", "verification", "confirm", ".edu", "help",
         "please", "return policy", "packaging",
@@ -90,6 +100,9 @@ def classify_intent(text: str) -> str:
         phrase_scores[intent] = phrase_score
 
     max_score = max(scores.values())
+    if max_score == 0:
+        return "general_inquiry"
+
     if max_score == 0:
         return "general_inquiry"
 
@@ -233,12 +246,16 @@ def should_escalate(intent: str, priority: str, text: str) -> bool:
     Escalation criteria:
     - High priority always escalates
     - Medium priority with escalation keywords escalates
-    - Certain intents at high priority escalate
+    - Delivery issues and complaints at medium priority escalate
     """
     text_lower = text.lower()
 
     # High priority always escalates
     if priority == "high":
+        return True
+
+    # Delivery issues and complaints at medium priority should escalate
+    if priority == "medium" and intent in ("delivery_issue", "complaint"):
         return True
 
     # Medium priority with strong escalation signals
@@ -293,7 +310,7 @@ class SupportAgent:
         return should_escalate(intent, email["priority"], email["text"])
 
     def decide_resolution(self, email: dict[str, Any], intent: str | None = None,
-                          escalated: bool | None = None) -> bool:
+        escalated: bool | None = None) -> bool:
         """Decide whether the case is resolved."""
         if intent is None:
             intent = self.classify(email)
