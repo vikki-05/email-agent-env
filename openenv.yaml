@@ -1,0 +1,78 @@
+name: customer-support-email-triage
+description: >
+  A deterministic AI agent environment for triaging customer support emails.
+  The agent classifies incoming emails into one of five intent labels and is
+  rewarded based on matching the predicted intent with the ground-truth label.
+
+entry_point: inference.py
+
+environment:
+  class: EmailEnv
+  module: env.environment
+
+agent:
+  model: gpt-4o-mini
+  api_base_env: API_BASE_URL
+  api_key_env: HF_TOKEN
+
+action_space:
+  type: discrete
+  actions:
+    - refund_request
+    - delivery_issue
+    - technical_issue
+    - complaint
+    - general_inquiry
+
+action_format:
+  type: json
+  schema:
+    action_type:
+      type: string
+      enum:
+        - refund_request
+        - delivery_issue
+        - technical_issue
+        - complaint
+        - general_inquiry
+    content:
+      type: string
+
+tasks:
+  easy:
+    description: >
+      Classify a small batch of clearly worded emails with unambiguous intent.
+    num_emails: 5
+    max_steps: 5
+    timeout: 120
+
+  medium:
+    description: >
+      Classify a mixed batch of emails spanning all five intent categories.
+    num_emails: 15
+    max_steps: 15
+    timeout: 360
+
+  hard:
+    description: >
+      Classify a large batch of emails including ambiguous and multi-issue cases.
+    num_emails: 30
+    max_steps: 30
+    timeout: 720
+
+logging:
+  format: structured
+  markers:
+    start: "[START]"
+    step: "[STEP]"
+    end: "[END]"
+  final_score_key: final_score
+
+resources:
+  max_cpu: 2
+  max_memory_gb: 8
+  max_runtime_minutes: 20
+
+dependencies:
+  python: "3.10"
+  requirements_file: requirements.txt

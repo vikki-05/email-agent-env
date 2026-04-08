@@ -18,8 +18,8 @@ from typing import Any
 INTENT_KEYWORDS: dict[str, list[str]] = {
     "refund_request": [
         "refund", "money back", "return process", "duplicate charge",
-        "cancellation", "billing error", "charged twice", "auto-renew",
-        "subscription", "credit", "reimburse",
+        "charged twice", "cancel order", "chargeback", "reimburse",
+        "damaged item", "broken", "defective",
     ],
     "delivery_issue": [
         "delivery", "delivered", "shipping", "shipped", "tracking",
@@ -27,24 +27,36 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "has not arrived", "hasn't been updated", "left at",
     ],
     "complaint": [
-        "complaint", "dissatisfied", "dissatisfaction", "dissatisfaction",
-        "terrible", "horrible", "worst", "rude", "unhelpful",
-        "misled", "misleading", "not as advertised", "feel misled",
-        "quality", "worse than", "disappointed", "reputation",
-        "not the level", "deep dissatisfaction",
+        "complaint", "dissatisfied", "dissatisfaction", "terrible",
+        "horrible", "worst", "rude", "unhelpful", "misled",
+        "misleading", "not as advertised", "feel misled", "quality",
+        "worse than", "disappointed", "reputation", "not the level",
+        "deep dissatisfaction",
     ],
     "technical_issue": [
-        "error", "crash", "crashes", "crashes immediately", "bug",
-        "broken", "login", "password", "account access",
-        "server", "500", "internal server error", "cannot log",
-        "invalid credentials", "not working", "regain access",
-        "uninstalling", "reinstalling", "clearing the cache",
+        "error", "crash", "crashes", "crashing", "crashes immediately", "bug",
+        "broken", "server", "500", "internal server error",
+        "not working", "checkout page", "page throws",
+        "can't log in", "cannot log in", "page throws a 500 error",
+        "reset password twice", "uninstalling", "reinstalling",
+        "clearing the cache",
+    ],
+    "billing_inquiry": [
+        "bill", "billing", "payment", "invoice", "statement",
+        "annual plan", "pricing", "price", "pricing change",
+        "extra charge", "amount than what", "charge of",
+    ],
+    "account_access": [
+        "account locked", "failed login", "too many failed login attempts",
+        "reset password", "two-factor authentication", "2fa",
+        "access to the email", "cannot access", "can't access",
+        "locked after", "account was locked", "account access",
     ],
     "general_inquiry": [
         "question", "wondering", "inquiry", "do you offer",
-        "policy", "information", "discount", "student",
-        "pricing", "education", "verification", "confirm",
-        ".edu", "help", "please",
+        "policy", "information", "discount", "student", "pricing",
+        "education", "verification", "confirm", ".edu", "help",
+        "please", "return policy", "packaging",
     ],
 }
 
@@ -81,14 +93,16 @@ def classify_intent(text: str) -> str:
         scores[intent] = score
         phrase_scores[intent] = phrase_score
 
-    # Find the highest raw score
+    # If no keywords matched, fall back to general inquiry.
     max_score = max(scores.values())
-    candidates = [k for k, v in scores.items() if v == max_score]
+    if max_score == 0:
+        return "general_inquiry"
 
+    candidates = [k for k, v in scores.items() if v == max_score]
     if len(candidates) == 1:
         return candidates[0]
 
-    # Tie-break by phrase match count
+    # Tie-break by phrase match count.
     best = max(candidates, key=lambda k: phrase_scores[k])
     return best
 
@@ -199,12 +213,16 @@ def should_escalate(intent: str, priority: str, text: str) -> bool:
     Escalation criteria:
     - High priority always escalates
     - Medium priority with escalation keywords escalates
-    - Certain intents at high priority escalate
+    - Delivery issues and complaints at medium priority escalate
     """
     text_lower = text.lower()
 
     # High priority always escalates
     if priority == "high":
+        return True
+
+    # Delivery issues and complaints at medium priority should escalate
+    if priority == "medium" and intent in ("delivery_issue", "complaint"):
         return True
 
     # Medium priority with strong escalation signals
@@ -259,7 +277,7 @@ class SupportAgent:
         return should_escalate(intent, email["priority"], email["text"])
 
     def decide_resolution(self, email: dict[str, Any], intent: str | None = None,
-                          escalated: bool | None = None) -> bool:
+        escalated: bool | None = None) -> bool:
         """Decide whether the case is resolved."""
         if intent is None:
             intent = self.classify(email)
