@@ -18,8 +18,8 @@ from typing import Any
 INTENT_KEYWORDS: dict[str, list[str]] = {
     "refund_request": [
         "refund", "money back", "return process", "duplicate charge",
-        "cancellation", "billing error", "charged twice", "auto-renew",
-        "subscription", "credit", "reimburse",
+        "charged twice", "cancel order", "chargeback", "reimburse",
+        "damaged item", "broken", "defective",
     ],
     "delivery_issue": [
         "delivery", "delivered", "shipping", "shipped", "tracking",
@@ -27,24 +27,36 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "has not arrived", "hasn't been updated", "left at",
     ],
     "complaint": [
-        "complaint", "dissatisfied", "dissatisfaction", "dissatisfaction",
-        "terrible", "horrible", "worst", "rude", "unhelpful",
-        "misled", "misleading", "not as advertised", "feel misled",
-        "quality", "worse than", "disappointed", "reputation",
-        "not the level", "deep dissatisfaction",
+        "complaint", "dissatisfied", "dissatisfaction", "terrible",
+        "horrible", "worst", "rude", "unhelpful", "misled",
+        "misleading", "not as advertised", "feel misled", "quality",
+        "worse than", "disappointed", "reputation", "not the level",
+        "deep dissatisfaction",
     ],
     "technical_issue": [
-        "error", "crash", "crashes", "crashes immediately", "bug",
-        "broken", "login", "password", "account access",
-        "server", "500", "internal server error", "cannot log",
-        "invalid credentials", "not working", "regain access",
-        "uninstalling", "reinstalling", "clearing the cache",
+        "error", "crash", "crashes", "crashing", "crashes immediately",
+        "bug", "broken", "server", "500", "internal server error",
+        "not working", "checkout page", "page throws",
+        "can't log in", "cannot log in", "page throws a 500 error",
+        "reset password twice", "uninstalling", "reinstalling",
+        "clearing the cache",
+    ],
+    "billing_inquiry": [
+        "bill", "billing", "payment", "invoice", "statement",
+        "annual plan", "pricing", "price", "pricing change",
+        "extra charge", "amount than what", "charge of",
+    ],
+    "account_access": [
+        "account locked", "failed login", "too many failed login attempts",
+        "reset password", "two-factor authentication", "2fa",
+        "access to the email", "cannot access", "can't access",
+        "locked after", "account was locked", "account access",
     ],
     "general_inquiry": [
         "question", "wondering", "inquiry", "do you offer",
-        "policy", "information", "discount", "student",
-        "pricing", "education", "verification", "confirm",
-        ".edu", "help", "please",
+        "policy", "information", "discount", "student", "pricing",
+        "education", "verification", "confirm", ".edu", "help",
+        "please", "return policy", "packaging",
     ],
 }
 
@@ -58,13 +70,9 @@ ESCALATION_KEYWORDS = [
 def classify_intent(text: str) -> str:
     """Classify the intent of an email using keyword scoring.
 
-    Each matching keyword adds 1 point.  The intent with the highest
-    score wins.  Ties are broken by the number of unique long-phrase
+    Each matching keyword adds 1 point. The intent with the highest
+    score wins. Ties are broken by the number of unique long-phrase
     matches (phrases with 2+ words score higher as tiebreakers).
-
-    Returns one of:
-        "refund_request", "delivery_issue", "complaint",
-        "technical_issue", "general_inquiry"
     """
     text_lower = text.lower()
 
@@ -76,21 +84,20 @@ def classify_intent(text: str) -> str:
         for keyword in keywords:
             if keyword in text_lower:
                 score += 1
-                if " " in keyword:  # multi-word phrase gets extra weight
+                if " " in keyword:
                     phrase_score += 1
         scores[intent] = score
         phrase_scores[intent] = phrase_score
 
-    # Find the highest raw score
     max_score = max(scores.values())
-    candidates = [k for k, v in scores.items() if v == max_score]
+    if max_score == 0:
+        return "general_inquiry"
 
+    candidates = [k for k, v in scores.items() if v == max_score]
     if len(candidates) == 1:
         return candidates[0]
 
-    # Tie-break by phrase match count
-    best = max(candidates, key=lambda k: phrase_scores[k])
-    return best
+    return max(candidates, key=lambda k: phrase_scores[k])
 
 
 def generate_reply(intent: str, email: dict[str, Any]) -> str:
@@ -169,6 +176,33 @@ def generate_reply(intent: str, email: dict[str, Any]) -> str:
             f"- Try accessing the service from a different device or browser\n\n"
             f"We will notify you as soon as the fix is deployed. Thank you "
             f"for your patience.\n\n"
+            f"Best regards,\nCustomer Support Team"
+        ),
+        "billing_inquiry": (
+            f"Dear Customer,\n\n"
+            f"Thank you for reaching out about your billing question "
+            f"(Reference #{email_id}).\n\n"
+            f"We understand how important it is to have clear information about "
+            f"your charges. We have reviewed your invoice details and will "
+            f"explain any unexpected amounts as quickly as possible.\n\n"
+            f"{kw_sentence}\n\n"
+            f"If you have additional questions about your invoice, statement, "
+            f"or annual plan pricing, please let us know and we will provide a "
+            f"complete breakdown of the charge.\n\n"
+            f"Best regards,\nCustomer Support Team"
+        ),
+        "account_access": (
+            f"Dear Customer,\n\n"
+            f"Thank you for contacting us about your account access issue "
+            f"(Reference #{email_id}).\n\n"
+            f"We understand how frustrating it is to lose access to your account. "
+            f"Our team is reviewing your login and security settings to restore "
+            f"access safely.\n\n"
+            f"{kw_sentence}\n\n"
+            f"Please try resetting your password again if you have not already, "
+            f"and make sure two-factor authentication codes are being received. "
+            f"If the issue continues, we will escalate this to our account "
+            f"security team for immediate assistance.\n\n"
             f"Best regards,\nCustomer Support Team"
         ),
         "general_inquiry": (
