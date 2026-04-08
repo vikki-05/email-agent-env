@@ -12,14 +12,20 @@ class ActionRequest(BaseModel):
     content: str | None = None
 
 
-# ✅ FIXED RESET
+# ✅ ROOT (fixes HF "Not Found")
+@app.get("/")
+def root():
+    return {"message": "Email Agent Env is running"}
+
+
+# ✅ RESET
 @app.post("/reset", response_model=Observation)
 def reset():
     obs = env.reset()
     return obs
 
 
-# ✅ FIXED STEP
+# ✅ STEP
 @app.post("/step")
 def step(action: ActionRequest):
     action_obj = Action(**action.dict())
