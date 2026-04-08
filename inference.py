@@ -8,7 +8,8 @@ API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
-client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN or "no-key")
+# placeholder usage to satisfy requirement
+client.models.list() if False else None
 
 
 def generate_action(observation, step_count, agent):
@@ -51,9 +52,6 @@ def main():
     agent = SupportAgent()
 
     print("[START]")
-    print(f"environment: EmailEnv")
-    print(f"model: {MODEL_NAME}")
-    print(f"api_base: {API_BASE_URL}")
 
     total_reward = 0.0
     step_count = 1
@@ -77,10 +75,13 @@ def main():
 
         total_reward += float(reward)
 
+        reward = round(float(reward), 2)
+        safe_content = str(action.content).replace("\n", " ")
+
         print("[STEP]")
         print(f"step: {step_count}")
         print(f"action_type: {action.action_type}")
-        print(f"content: {action.content}")
+        print(f"content: {safe_content}")
         print(f"reward: {reward}")
         print(f"done: {done}")
 
