@@ -28,12 +28,18 @@ def reset():
 # ✅ STEP
 @app.post("/step")
 def step(action: ActionRequest):
-    action_obj = Action(**action.dict())
-    obs, reward, done, info = env.step(action_obj)
+    try:
+        action_obj = Action(**action.dict())
+        obs, reward, done, info = env.step(action_obj)
 
-    return {
-        "observation": obs.dict(),
-        "reward": float(reward),
-        "done": done,
-        "info": info
-    }
+        return {
+            "observation": obs.dict(),
+            "reward": float(reward),
+            "done": done,
+            "info": info
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }

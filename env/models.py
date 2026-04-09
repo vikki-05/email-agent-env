@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-VALID_ACTIONS = ("classify", "reply", "escalate", "close")
+VALID_ACTIONS = ["classify", "reply", "escalate", "close"]
 
 class Action(BaseModel):
     action_type: str
