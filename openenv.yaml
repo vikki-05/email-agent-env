@@ -18,11 +18,10 @@ agent:
 action_space:
   type: discrete
   actions:
-    - refund_request
-    - delivery_issue
-    - technical_issue
-    - complaint
-    - general_inquiry
+    - classify
+    - reply
+    - escalate
+    - close
 
 action_format:
   type: json
@@ -30,34 +29,33 @@ action_format:
     action_type:
       type: string
       enum:
-        - refund_request
-        - delivery_issue
-        - technical_issue
-        - complaint
-        - general_inquiry
+        - classify
+        - reply
+        - escalate
+        - close
     content:
       type: string
 
 tasks:
   easy:
     description: >
-      Classify a small batch of clearly worded emails with unambiguous intent.
-    num_emails: 5
+      Handle a single customer email through the full triage workflow.
+    num_emails: 1
     max_steps: 5
     timeout: 120
 
   medium:
     description: >
-      Classify a mixed batch of emails spanning all five intent categories.
-    num_emails: 15
-    max_steps: 15
+      Handle a single customer email with moderate complexity.
+    num_emails: 1
+    max_steps: 5
     timeout: 360
 
   hard:
     description: >
-      Classify a large batch of emails including ambiguous and multi-issue cases.
-    num_emails: 30
-    max_steps: 30
+      Handle a single customer email that may require escalation.
+    num_emails: 1
+    max_steps: 5
     timeout: 720
 
 logging:

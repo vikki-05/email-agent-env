@@ -20,8 +20,6 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "refund", "money back", "return process", "duplicate charge",
         "charged twice", "cancel order", "chargeback", "reimburse",
         "damaged item", "broken", "defective",
-        "charged twice", "cancel order", "chargeback", "reimburse",
-        "damaged item", "broken", "defective",
     ],
     "delivery_issue": [
         "delivery", "delivered", "shipping", "shipped", "tracking",
@@ -29,11 +27,6 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
         "has not arrived", "hasn't been updated", "left at",
     ],
     "complaint": [
-        "complaint", "dissatisfied", "dissatisfaction", "terrible",
-        "horrible", "worst", "rude", "unhelpful", "misled",
-        "misleading", "not as advertised", "feel misled", "quality",
-        "worse than", "disappointed", "reputation", "not the level",
-        "deep dissatisfaction",
         "complaint", "dissatisfied", "dissatisfaction", "terrible",
         "horrible", "worst", "rude", "unhelpful", "misled",
         "misleading", "not as advertised", "feel misled", "quality",
@@ -62,11 +55,8 @@ INTENT_KEYWORDS: dict[str, list[str]] = {
     "general_inquiry": [
         "question", "wondering", "inquiry", "do you offer",
         "policy", "information", "discount", "student", "pricing",
-        "education", "verification", "confirm", ".edu", "help",
-        "please", "return policy", "packaging",
-        "policy", "information", "discount", "student", "pricing",
-        "education", "verification", "confirm", ".edu", "help",
-        "please", "return policy", "packaging",
+        "education", "verification", "confirm", ".edu", "return policy",
+        "packaging",
     ],
 }
 

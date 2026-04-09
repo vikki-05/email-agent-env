@@ -31,18 +31,18 @@ def generate_action(observation, step_count, agent):
     has_escalated = "escalate" in history
 
     if not has_classified:
-        return Action("classify", intent)
+        return Action(action_type="classify", content=intent)
 
     if not has_replied:
-        return Action("reply", agent.reply(email, intent))
+        return Action(action_type="reply", content=agent.reply(email, intent))
 
     if agent.decide_escalation(email, intent) and not has_escalated:
-        return Action("escalate", None)
+        return Action(action_type="escalate", content=None)
 
     if has_escalated or agent.decide_resolution(email, intent, has_escalated):
-        return Action("close", None)
+        return Action(action_type="close", content=None)
 
-    return Action("reply", "We are continuing to work on your issue.")
+    return Action(action_type="reply", content="We are continuing to work on your issue.")
 
 
 def main():

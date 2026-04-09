@@ -271,9 +271,9 @@ if __name__ == "__main__":
     print(f"  Time waiting: {obs.time_waiting}h")
 
     actions = [
-        Action("classify", "refund_request"),
-        Action("reply", "I can help process your refund for the charged amount."),
-        Action("close"),
+        Action(action_type="classify", content="refund_request"),
+        Action(action_type="reply", content="I can help process your refund for the charged amount."),
+        Action(action_type="close", content=None),
     ]
 
     total_reward = 0.0
