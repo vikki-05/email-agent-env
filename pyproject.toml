@@ -7,7 +7,7 @@ dependencies = ["openenv-core>=0.2.0"]
 requires-python = ">=3.10"
 
 [project.scripts]
-server = "app:app"
+server = "server.app:main"
 
 [project.entry-points."openenv.environments"]
 email-agent-env = "env.environment:EmailEnv"
