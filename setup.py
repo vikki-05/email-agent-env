@@ -3,5 +3,6 @@ from setuptools import setup, find_packages
 setup(
     name="email-agent-env",
     version="0.1.0",
-    packages=find_packages(),
+    packages=find_packages(include=["env", "env.*"]),
+    include_package_data=True,
 )
