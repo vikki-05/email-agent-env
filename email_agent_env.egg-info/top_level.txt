@@ -1,6 +1,0 @@
-data
-env
-graders
-models
-tasks
-venv
