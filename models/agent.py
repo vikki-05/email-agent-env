@@ -93,9 +93,6 @@ def classify_intent(text: str) -> str:
     if max_score == 0:
         return "general_inquiry"
 
-    if max_score == 0:
-        return "general_inquiry"
-
     candidates = [k for k, v in scores.items() if v == max_score]
     if len(candidates) == 1:
         return candidates[0]

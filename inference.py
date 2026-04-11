@@ -1,15 +1,11 @@
 import os
 from models.agent import SupportAgent
 from env.models import Action
-from openai import OpenAI
 from env.environment import EmailEnv
 
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
 HF_TOKEN = os.getenv("HF_TOKEN")
-
-# placeholder usage to satisfy requirement
-client.models.list() if False else None
 
 
 def generate_action(observation, step_count, agent):

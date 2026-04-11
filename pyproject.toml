@@ -9,6 +9,11 @@ requires-python = ">=3.10"
 [project.entry-points."openenv.environments"]
 email-agent-env = "env.environment:EmailEnv"
 
+[project.entry-points."openenv.tasks"]
+easy = "tasks.easy_task:run"
+medium = "tasks.medium_task:run"
+hard = "tasks.hard_task:run"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
